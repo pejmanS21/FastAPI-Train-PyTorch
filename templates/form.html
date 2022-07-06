@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sample Form</title>
+</head>
+<body>
+<form method="post">
+    <h4>Model Name:
+        <input type="string" name="model_name" value="fashionMNIST"/><br>
+    </h4>
+    <h4>Optimizer:
+        <select name="Optimizer" id="cars">
+            <option value="Adam">Adam</option>
+            <option value="SGD">SGD</option>
+        </select><br>
+    </h4>
+    <h4>Learning Rate:
+        <input type="number" name="learning_rate" value="0.001" step="0.0001"/><br>
+    </h4>
+    <h4>Batch Size
+        <input type="number" name="batch_size" value="128"/><br><br>
+    </h4>
+    <h4>Epoch:
+        <input type="number" name="epoch" value="1"/><br><br>
+    </h4>
+    <h4>Hidden Size:
+        <input type="number" name="initial_hidden_size" value="4"/><br><br>
+    </h4>
+    <input type="submit">
+</form>
+</body>
+</html>
