@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Request, Form
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,10 +10,12 @@ from utils import get_device, save_results
 from torch.utils.data import DataLoader
 from torchvision import transforms, datasets
 import torch
+import os
 import io
 from starlette.responses import StreamingResponse
 import cv2
 import base64
+
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates/")
@@ -20,6 +23,12 @@ templates = Jinja2Templates(directory="templates/")
 app.add_middleware(
     CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]
 )
+
+
+if not os.path.isdir("static"):
+    os.mkdir("static")
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 @app.get("/")
