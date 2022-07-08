@@ -45,43 +45,48 @@ def form_post(request: Request):
 def form_post(
     request: Request,
     model_name: str = Form(...),
+    dataset_name: str = Form(...),
     Optimizer: str = Form(...),
     learning_rate: float = Form(...),
     batch_size: int = Form(...),
     epoch: int = Form(...),
     initial_hidden_size: int = Form(...),
 ):
-
+    out_ch = 1
+    if dataset_name == "CIFAR10" or dataset_name == "CIFAR100":
+        out_ch = 3
     # transform to normalize the data
     hp = HyperParam()
     compose = []
-    for key, value in hp.transform.items():
+    for key, value in eval(f"hp.transform_{out_ch}D").items():
         if type(value) == bool:
             if value is True:
                 compose.append(eval("transforms.{}()".format(key)))
         elif key == "Normalize":
             compose.append(
                 eval(
-                    f"transforms.{key}(hp.transform['{key}']['mean'], hp.transform['{key}']['std'])"
+                    f"transforms.{key}(hp.transform_{out_ch}D['{key}']['mean'], hp.transform_{out_ch}D['{key}']['std'])"
                 )
             )
         else:
-            compose.append(eval(f"transforms.{key}(hp.transform['{key}'])"))
+            compose.append(eval(f"transforms.{key}(hp.transform_{out_ch}D['{key}'])"))
 
     transform = transforms.Compose(compose)
     # Download and load the training data
-    dataset = datasets.FashionMNIST(
-        "./data", download=True, train=True, transform=transform
+    dataset = eval(
+        f"datasets.{dataset_name}('./data', download=True, train=True, transform=transform)"
     )
     train_dl = DataLoader(dataset, batch_size=batch_size, shuffle=True)
     # Download and load the test data
-    val_dataset = datasets.FashionMNIST(
-        "./data", download=True, train=False, transform=transform
+    val_dataset = eval(
+        f"datasets.{dataset_name}('./data', download=True, train=False, transform=transform)"
     )
     val_dl = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)
 
     model = CNN(
-        in_channels=1, hidden_size=initial_hidden_size, out_classes=len(hp.label_names)
+        in_channels=dataset[0][0].shape[0],
+        hidden_size=initial_hidden_size,
+        out_classes=len(dataset.classes),
     ).to(get_device())
     criterion = eval("torch.nn.{}()".format(hp.criterion["name"]))
     optimizer = eval(

@@ -7,10 +7,17 @@
 <body>
 <form method="post">
     <h4>Model Name:
-        <input type="string" name="model_name" value="fashionMNIST"/><br>
+        <input type="string" name="model_name" value="FastAPI_Torch"/><br>
+    </h4>
+    <h4>DataSet:
+        <select name="dataset_name" id="Data">
+            <option value="MNIST">MNIST</option>
+            <option value="FashionMNIST">FashionMNIST</option>
+            <option value="CIFAR10">CIFAR10</option>
+        </select><br>
     </h4>
     <h4>Optimizer:
-        <select name="Optimizer" id="cars">
+        <select name="Optimizer" id="Opt">
             <option value="Adam">Adam</option>
             <option value="SGD">SGD</option>
         </select><br>
