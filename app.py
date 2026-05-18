@@ -16,7 +16,6 @@ from starlette.responses import StreamingResponse
 import cv2
 import base64
 
-
 app = FastAPI()
 templates = Jinja2Templates(directory="templates/")
 
